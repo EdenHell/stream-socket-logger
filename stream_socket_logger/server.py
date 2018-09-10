@@ -52,7 +52,7 @@ def run_server(server_address):
         server = ThreadingUnixStreamServer(server_address, LogRecordStreamHandler, False)
     else:
         server = ThreadingTCPServer(server_address, LogRecordStreamHandler, False)
-    with server:
+    try:
         server.request_queue_size = request_queue_size
         # server.socket.settimeout(0)
         try:
@@ -62,6 +62,14 @@ def run_server(server_address):
             server.server_close()
             raise
         server.serve_forever(0.1)
+    finally:
+        server.server_close()
+        if type(server_address) is str:
+            try:
+                os.remove(server_address)
+            except OSError as e:
+                if e.errno != errno.ENOENT:  # errno.ENOENT = no such file or directory
+                    raise
 
 
 if __name__ == '__main__':
