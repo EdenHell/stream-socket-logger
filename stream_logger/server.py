@@ -70,12 +70,12 @@ if __name__ == '__main__':
     import logging.config
 
     parser = argparse.ArgumentParser(description='stream logger server')
-    parser.add_argument('host', type=str, nargs=1, help='Connect to host.')
-    parser.add_argument('-p', '--port', type=int, nargs=1, help='Port number.')
-    parser.add_argument('-c', '--config', type=str, nargs=1, help='Config file path')
+    parser.add_argument('host', type=str, help='Connect to host.')
+    parser.add_argument('-p', '--port', type=int, help='Port number.')
+    parser.add_argument('-c', '--config', type=str, help='Config file path')
     args = parser.parse_args()
-
-    with open(args.config) as f:
-        config = json.load(f)
-    logging.config.dictConfig(config)
+    if args.config is not None:
+        with open(args.config) as f:
+            config = json.load(f)
+        logging.config.dictConfig(config)
     run_server(args.host if args.port is None else (args.host, args.port))
