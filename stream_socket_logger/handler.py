@@ -2,7 +2,7 @@ from logging.handlers import SocketHandler
 import struct
 
 
-class StreamHandler(SocketHandler):
+class StreamSocketHandler(SocketHandler):
 
     def __init__(self, host, port=None, *, producer=None):
         """
